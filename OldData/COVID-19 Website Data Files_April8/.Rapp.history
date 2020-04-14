@@ -1,0 +1,326 @@
+226/1105
+257/1219
+222-1102
+222/1102
+445/1660
+install.packages("coronavirus")
+library(coronavirus)
+data(coronavirus)
+head(coronavirus)
+tail(coronavirus)
+setwd("/Users/zacharyweller/Downloads/COVID-19 Website Data Files")
+list.files()
+library(readr)
+library(stringr)
+files <- list.files()#
+fdates <- c()
+f = files[1]
+f
+tmp <-  read_csv(f)
+head(tmp)
+tmp$value[1]
+tmp$value[3]
+tmp$value[4]
+substr(f, 22, 31)
+tested <- c()#
+cases <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(f)#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+}
+cases
+tested
+diff(cases)
+diff(tested)
+daily_cases = diff(cases)
+dailey_tests = diff(tested)
+daily_cases = diff(cases)#
+dailyy_tests = diff(tested)#
+pct_pos = daily_cases/daily_tests
+daily_cases = diff(cases)#
+daily_tests = diff(tested)#
+pct_pos = daily_cases/daily_tests
+plot(pct_pos)
+plot(fdates, pct_pos, type = "l")
+length(pct_pos)
+length(fdates)
+report_dates = fdates[-1]
+library(lubridate)
+report_dates = as.date(report_dates)
+report_dates = date(report_dates)
+plot(report_dates, pct_pos, type = "l")
+daily_tests
+plot(report_dates, pct_pos, type = "l", ylim = c(0, 1))#
+lines(report_dates, daily_tests/max(daily_tests))
+pct_pos[]
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 1))
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 1), bg = "gray")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")
+lines(h = seq(0, 1, by = 0.1))
+lines(h = seq(0, 1, by = 0.1), col = "black")
+abline(h = seq(0, 1, by = 0.1), col = "black")
+abline(h = seq(0, 1, by = 0.1), col = "white")
+abline(v = 1:23, col = "white")
+par("usr")[1]
+par("usr")[4]
+report_dates[1]
+report_dates[1]*1
+report_dates[1] + 1
+as.Posixlt()
+summary(report_dates[1])
+24*60*60
+abline(v = seq(18339, by = 86400, length = 23), col = "white")
+abline(v = seq(18339, by = 86400), col = "white")
+as.numeric(report_dates[1]) + length(report_dates)*86400
+lastd = as.numeric(report_dates[1]) + length(report_dates)*86400
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 1))#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 1, by = 0.1), col = "white")#
+abline(v = seq(18339, lastd, by = 86400), col = "white")#
+lines(report_dates, daily_tests/max(daily_tests))
+lastd
+seq(18339, lastd, by = 86400)
+par("usr")[2]
+lastd = as.numeric(report_dates[1]) + length(report_dates)*24#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 1))#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 1, by = 0.1), col = "white")#
+abline(v = seq(18339, lastd, by = 86400), col = "white")#
+lines(report_dates, daily_tests/max(daily_tests))
+as.numeric(report_dates[1])
+18360-18334
+lastd = as.numeric(report_dates[1]) + 24#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 1))#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 1, by = 0.1), col = "white")#
+abline(v = seq(18339, l, by = 1), col = "white")
+lastd = as.numeric(report_dates[1]) + 24#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 1))#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 1, by = 0.1), col = "white")#
+abline(v = seq(18339, lastd, by = 1), col = "white")
+lines(report_dates, daily_tests/max(daily_tests))
+lines(report_dates, pct_pos, col = "red", lwd = 2, lty = "b")
+lines(report_dates, pct_pos, col = "red", lwd = 2, type = "b")
+lines(report_dates, pct_pos, col = "darkred, lwd = 2, type = "b")
+lines(report_dates, pct_pos, col = "darkred", lwd = 2, type = "b")
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 1))#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 1, by = 0.1), col = "white")#
+abline(v = seq(18339, lastd, by = 1), col = "white")#
+lines(report_dates, pct_pos, col = "darkred", lwd = 2, type = "b")
+mtext("Date of Report", side = 1)
+mtext("Date of Report", side = 1, line = 2)
+mtext("Date of Report", side = 1, line = 2.5, cex = 2)
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)
+mtext("CO Positive COVID-19 Tests", side = 3, line = 2.5, cex = 2)
+mtext("CO Positive COVID-19 Tests", side = 3, line = 1.5, cex = 2)
+mtext("CO Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 1), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("CO Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 1, by = 0.1), col = "white")#
+abline(v = seq(18339, lastd, by = 1), col = "white")#
+lines(report_dates, pct_pos, col = "darkred", lwd = 2, type = "b")
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("CO Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 1, by = 0.1), col = "white")#
+abline(v = seq(18339, lastd, by = 1), col = "white")#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("CO Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white")#
+abline(v = seq(18339, lastd, by = 1), col = "white")#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+#lines(report_dates, daily_tests/max(daily_tests))
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("CO Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+#lines(report_dates, daily_tests/max(daily_tests))
+points(report_dates, pct_pos*100, col = "darkred")
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)
+as.character(daily_tests)
+text(report_dates, 80, as.character(daily_tests))
+help(text)
+text(report_dates, 80, as.character(daily_tests), srt = 2)
+text(report_dates, 80, as.character(daily_tests), srt = 45)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("CO Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates, 80, as.character(daily_tests), srt = 45)
+text(report_dates-0.25, 75, as.character(daily_tests), srt = 45)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("CO Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates-0.35, 75, as.character(daily_tests), srt = 45)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("CO Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates-0.35, 60, as.character(daily_tests), srt = 45)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("CO Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates-0.35, 63, as.character(daily_tests), srt = 45)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates-0.35, 63, as.character(daily_tests), srt = 45)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: Daily Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_date[1] - 0.5, 63 "Number of Tests", srt = 45)
+text(report_date[1] , 63 "Number of Tests", srt = 45)
+text(report_dates[1] , 63 "Number of Tests", srt = 45)
+text(report_dates[1] , 63, "Number of Tests", srt = 45)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n")
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n")#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: Daily Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: Daily Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[1] , 63, "Number of Tests", srt = 45)
+text(report_dates[10] , 65, "Number of Tests")
+text(report_dates[10] , 70, "Number of Tests")
+text(report_dates[10] , 75, "Number of Tests")
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: Daily Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests")
+axis(side = 2, at = report_dates)
+axis(side = 2, at = report_dates, labes = report_dates)
+axis(side = 2, at = report_dates, labels = report_dates)
+axis(side = 2, at = report_dates, labels = as.character(report_dates) )
+as.character(report_dates)
+help(axis)
+axis(side = 1, at = report_dates, labels = as.character(report_dates) )
+report_dates%m
+report_dates
+format(report_dates, %M)
+help(format)
+format(report_dates)
+format(report_dates, format = "%M %d")
+format(report_dates, format = "%b %d")
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+axis(side = 1, at = report_dates, labels = format(report_dates, format = "%b %d") )#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: Daily Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests")
+text(report_dates[10] , 75, "Number of Tests", font = "b")
+text(report_dates[10] , 75, "Number of Tests", lwd = 2)
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+axis(side = 1, at = report_dates, labels = format(report_dates, format = "%b %d") )#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: Daily Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+axis(side = 1, at = report_dates, labels = format(report_dates, format = "%b %d") )#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: Daily Positive COVID-19 Tests", side = 3, line = 0.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25)#
+#lines(report_dates, daily_tests/max(daily_tests))

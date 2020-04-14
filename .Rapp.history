@@ -1,0 +1,1677 @@
+library(readr)#
+library(stringr)#
+library(lubridate)#
+library(png)#
+library(plotrix)#
+setwd("/Users/zacharyweller/Desktop/COcovid")#
+list.files()#
+#
+tw <- readPNG("twitter.png")#
+usr <- par("usr")#
+plot.new()#
+rasterImage(tw, usr[1], usr[3], usr[2], usr[4])
+tw <- readPNG("twitter.png")#
+usr <- par("usr")#
+plot.new()#
+rasterImage(tw, usr[1], usr[3], usr[2], usr[4])
+files <- list.files("COVID-19 Website Data Files")#
+tested <- c()#
+cases <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+}#
+#
+daily_cases = diff(cases)#
+daily_cases = c(cases[1], daily_cases)#
+daily_tests = diff(tested)#
+daily_tests = c(tested[1], daily_tests)#
+pct_pos = daily_cases/daily_tests#
+report_dates = fdates#
+report_dates = date(report_dates)#
+lastd = as.numeric(report_dates[1]) + 24#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 5.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.45), 95, paste("Total Positive: ", sum(daily_cases)) )#
+text(max(report_dates - 1.6), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+mtext("@wellerstats", side = 3)#
+rasterImage(tw, max(report_dates - 1.45), 95, max(report_dates - 1), 100)
+rasterImage(tw, min(report_dates), 100, min(report_dates + 1), 105)
+rasterImage(tw, min(report_dates), 100, min(report_dates + 1), 110)
+rasterPlot(tw, min(report_dates), 100, min(report_dates + 1), 110)
+rasterPlot(tw, min(report_dates), 100, min(report_dates + 1), 110, xpd = T)
+rasterImage(tw, min(report_dates), 100, min(report_dates + 1), 110, xpd = T)
+rasterImage(tw, min(report_dates)-1, 100, min(report_dates + 1), 110, xpd = T)
+rasterImage(tw, min(report_dates)-2, 100, min(report_dates) , 110, xpd = T)
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)
+mtext("@wellerstats", at = min(report_dates)-2  side = 3)
+mtext("@wellerstats", at = min(report_dates)-2,  side = 3)
+mtext("@wellerstats", at = min(report_dates)+2,  side = 3)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 5.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.45), 95, paste("Total Positive: ", sum(daily_cases)) )#
+text(max(report_dates - 1.6), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+2,  side = 3)
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 1)
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.5)
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 5.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.45), 95, paste("Total Positive: ", sum(daily_cases)) )#
+text(max(report_dates - 1.6), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "lightblue")
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "blue")
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 5.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.45), 95, paste("Total Positive: ", sum(daily_cases)) )#
+text(max(report_dates - 1.6), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "deepskyblue4")
+pdf("co_positive.pdf")#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 5.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.45), 95, paste("Total Positive: ", sum(daily_cases)) )#
+text(max(report_dates - 1.6), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "deepskyblue4")#
+#
+dev.off()
+pdf("co_positive.pdf", width = 5, height = 5)#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 5.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.45), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.6), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf("co_positive.pdf", width = 10, height = 10)#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 5.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.45), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.6), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf("co_positive.pdf", width = 8, height = 8)#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 5.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.45), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.6), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf("co_positive.pdf", width = 8, height = 8)#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.65), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.6), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf("co_positive.pdf", width = 8, height = 8)#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 1.85), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.75), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.35,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf("co_positive.pdf", width = 8, height = 8)#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.05), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.95), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+library(readr)#
+library(stringr)#
+library(lubridate)#
+library(png)#
+library(plotrix)#
+setwd("/Users/zacharyweller/Google Drive/COcovid")#
+list.files()#
+#
+tw <- readPNG("twitter.png")#
+usr <- par("usr")#
+plot.new()#
+rasterImage(tw, usr[1], usr[3], usr[2], usr[4])#
+#
+files <- list.files("COVID-19 Website Data Files")#
+tested <- c()#
+cases <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+}#
+#
+daily_cases = diff(cases)#
+daily_cases = c(cases[1], daily_cases)#
+daily_tests = diff(tested)#
+daily_tests = c(tested[1], daily_tests)#
+pct_pos = daily_cases/daily_tests#
+report_dates = fdates#
+report_dates = date(report_dates)#
+lastd = as.numeric(report_dates[1]) + 24#
+#
+pdf("co_positive_Apr09.pdf", width = 8, height = 8)#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.05), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.95), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+files <- list.files("COVID-19 Website Data Files_April9")
+library(readr)#
+library(stringr)#
+library(lubridate)#
+library(png)#
+library(plotrix)#
+setwd("/Users/zacharyweller/Google Drive/COcovid")#
+list.files()#
+#
+tw <- readPNG("twitter.png")#
+usr <- par("usr")#
+#plot.new()#
+#rasterImage(tw, usr[1], usr[3], usr[2], usr[4])#
+#
+files <- list.files("COVID-19 Website Data Files_April9")#
+tested <- c()#
+cases <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+}#
+#
+daily_cases = diff(cases)#
+daily_cases = c(cases[1], daily_cases)#
+daily_tests = diff(tested)#
+daily_tests = c(tested[1], daily_tests)#
+pct_pos = daily_cases/daily_tests#
+report_dates = fdates#
+report_dates = date(report_dates)#
+lastd = as.numeric(report_dates[1]) + 24#
+#
+pdf("co_positive_Apr09.pdf", width = 8, height = 8)#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.05), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.95), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+tested <- c()#
+cases <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+}
+files
+files <- list.files("COVID-19 Website Data Files_April9")#
+files <- files[-1]#
+tested <- c()#
+cases <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+}#
+#
+daily_cases = diff(cases)#
+daily_cases = c(cases[1], daily_cases)#
+daily_tests = diff(tested)#
+daily_tests = c(tested[1], daily_tests)#
+pct_pos = daily_cases/daily_tests#
+report_dates = fdates#
+report_dates = date(report_dates)#
+lastd = as.numeric(report_dates[1]) + 24
+daily_cases
+library(readr)#
+library(stringr)#
+library(lubridate)#
+library(png)#
+library(plotrix)#
+setwd("/Users/zacharyweller/Google Drive/COcovid")#
+list.files()#
+#
+tw <- readPNG("twitter.png")#
+usr <- par("usr")#
+#plot.new()#
+#rasterImage(tw, usr[1], usr[3], usr[2], usr[4])#
+#
+files <- list.files("COVID-19 Website Data Files_April9")#
+files <- files[-1]#
+tested <- c()#
+cases <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+}
+setwd("/Users/zacharyweller/Google Drive/COcovid")#
+list.files()#
+#
+tw <- readPNG("twitter.png")#
+usr <- par("usr")#
+#plot.new()#
+#rasterImage(tw, usr[1], usr[3], usr[2], usr[4])#
+#
+files <- list.files("COVID-19 Website Data Files_April9")#
+files <- files[-1]#
+tested <- c()#
+cases <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files_April9/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+}
+tw <- readPNG("twitter.png")#
+#usr <- par("usr")#
+#plot.new()#
+#rasterImage(tw, usr[1], usr[3], usr[2], usr[4])#
+#
+files <- list.files("COVID-19 Website Data Files_April9")#
+files <- files[-1]#
+tested <- c()#
+cases <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files_April9/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+}#
+#
+daily_cases = diff(cases)#
+daily_cases = c(cases[1], daily_cases)#
+daily_tests = diff(tested)#
+daily_tests = c(tested[1], daily_tests)#
+pct_pos = daily_cases/daily_tests#
+report_dates = fdates#
+report_dates = date(report_dates)#
+lastd = as.numeric(report_dates[1]) + 24
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.05), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.95), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")
+pdf("co_positive_Apr09.pdf", width = 8, height = 8)#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.05), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 1.95), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf("co_positive_Apr09.pdf", width = 8, height = 8)#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.15), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf("co_positive_Apr09.pdf", width = 8, height = 8)#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.5, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.15), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf("co_positive_Apr09.pdf", width = 8, height = 8)#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.15), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf("co_positive_Apr09.pdf", width = 8, height = 8)#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+6202/31180
+library(readr)#
+library(stringr)#
+library(lubridate)#
+library(png)#
+library(plotrix)#
+setwd("/Users/zacharyweller/Google Drive/COcovid")#
+list.files()#
+#
+tw <- readPNG("twitter.png")#
+#usr <- par("usr")#
+#plot.new()#
+#rasterImage(tw, usr[1], usr[3], usr[2], usr[4])#
+#
+files <- list.files("COVID-19 Website Data Files_April9")#
+files <- files[-1]#
+tested <- c()#
+cases <- c()#
+deaths <- c()#
+fdates <- c()
+f = files[1]
+f
+tmp <-  read_csv(paste0("COVID-19 Website Data Files_April9/", f) )
+tmp
+tail(tmp)
+print(tmp)
+files <- list.files("COVID-19 Website Data Files_April9")#
+files <- files[-1]#
+state_data <- data.frame()#
+tested <- c()#
+cases <- c()#
+deaths <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files_April9/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+	state_data = data.frame(rbind(state_data, tmp$value[1:6]))#
+}
+tmp$value[1:6]
+state_data <- data.frame()
+data.frame(rbind(state_data, tmp$value[1:6]))
+f = files[2]
+#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files_April9/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+	state_data = data.frame(rbind(state_data, tmp$value[1:6]))
+files <- list.files("COVID-19 Website Data Files_April9")#
+files <- files[-1]#
+state_data <- data.frame()#
+tested <- c()#
+cases <- c()#
+deaths <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files_April9/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+	state_data <-  data.frame(rbind(state_data, tmp$value[1:6]))#
+}
+state_data <- data.frame()#
+tested <- c()#
+cases <- c()#
+deaths <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files_April9/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+	print(tmp$value[1:6])#
+	state_data <-  data.frame(rbind(state_data, tmp$value[1:6]))#
+}
+files <- list.files("COVID-19 Website Data Files_April9")#
+files <- files[-1]#
+state_data <- data.frame()#
+tested <- c()#
+cases <- c()#
+deaths <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files_April9/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+	print(tmp$value[1:6])#
+	state_data <-  data.frame(rbind(state_data, as.numeric(tmp$value[1:6])) )#
+}
+varnames <- tmp$metric[1:6]
+varnames
+names(state_data) <- varnames
+names(state_data)
+report_dates = fdates#
+report_dates = date(report_dates)#
+state_data$ReportDate <- report_dates
+daily_cases = diff(state_data$Cases)#
+daily_cases = c(state_data$Cases[1], daily_cases)#
+daily_tests = diff(state_data$PeopleTested)#
+daily_tests = c(state_data$PeopleTested, daily_tests)#
+pct_pos = daily_cases/daily_tests
+date()
+help(date)
+format(date(), format = "%b %d")
+format(Sys.time(), format = "%b %d")
+format(Sys.time(), form = "%b%d")
+plot(ReportDate, Cases, data = state_data)
+plot(stat_data$ReportDate, state_date$Cases)
+plot(state_data$ReportDate, state_date$Cases)
+plot(state_data$ReportDate, state_data$Cases)
+tot = 39.26+111.35+174.57
+.4*tot
+tot
+125/tot
+library(readr)#
+library(stringr)#
+library(lubridate)#
+library(png)#
+library(plotrix)#
+setwd("/Users/zacharyweller/Google Drive/COcovid")#
+list.files()#
+#
+tw <- readPNG("twitter.png")#
+#usr <- par("usr")#
+#plot.new()#
+#rasterImage(tw, usr[1], usr[3], usr[2], usr[4])#
+#
+files <- list.files("COVID-19 Website Data Files")#
+files <- files[-1]#
+state_data <- data.frame()#
+tested <- c()#
+cases <- c()#
+deaths <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+	#get state data#
+	state_data <-  data.frame(rbind(state_data, as.numeric(tmp$value[1:6])) )#
+}
+varnames <- tmp$metric[1:6]#
+names(state_data) <- varnames#
+names(state_data)[4] <- "PeopleTested"#
+report_dates = fdates#
+report_dates = date(report_dates)#
+state_data$ReportDate <- report_dates#
+#compute daily data#
+daily_cases = diff(state_data$Cases)#
+daily_cases = c(state_data$Cases[1], daily_cases)#
+daily_tests = diff(state_data$PeopleTested)#
+daily_tests = c(state_data$PeopleTested, daily_tests)#
+pct_pos = daily_cases/daily_tests#
+state_data$daily_cases <- daily_cases#
+state_data$daily_tests <- daily_tests#
+state_data$pct_pos <- pct_pos#
+#
+#compute last day + 1 for plotting purposes#
+lastd = as.numeric(report_dates[1]) + 24#
+#
+####Surveillance plot#
+today <- format(Sys.time(), form = "%b%d")#
+pdf(paste0("co_positive_",today,".pdf", width = 8, height = 8)#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+library(readr)#
+library(stringr)#
+library(lubridate)#
+library(png)#
+library(plotrix)#
+setwd("/Users/zacharyweller/Google Drive/COcovid")#
+list.files()#
+#
+tw <- readPNG("twitter.png")#
+#usr <- par("usr")#
+#plot.new()#
+#rasterImage(tw, usr[1], usr[3], usr[2], usr[4])#
+#
+files <- list.files("COVID-19 Website Data Files")#
+files <- files[-1]#
+state_data <- data.frame()#
+tested <- c()#
+cases <- c()#
+deaths <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+	#get state data#
+	state_data <-  data.frame(rbind(state_data, as.numeric(tmp$value[1:6])) )#
+}#
+#
+varnames <- tmp$metric[1:6]#
+names(state_data) <- varnames#
+names(state_data)[4] <- "PeopleTested"#
+report_dates = fdates#
+report_dates = date(report_dates)#
+state_data$ReportDate <- report_dates#
+#compute daily data#
+daily_cases = diff(state_data$Cases)#
+daily_cases = c(state_data$Cases[1], daily_cases)#
+daily_tests = diff(state_data$PeopleTested)#
+daily_tests = c(state_data$PeopleTested, daily_tests)#
+pct_pos = daily_cases/daily_tests#
+state_data$daily_cases <- daily_cases#
+state_data$daily_tests <- daily_tests#
+state_data$pct_pos <- pct_pos
+state_data
+varnames <- tmp$metric[1:6]#
+names(state_data) <- varnames#
+names(state_data)[4] <- "PeopleTested"#
+report_dates = fdates#
+report_dates = date(report_dates)#
+state_data$ReportDate <- report_dates#
+#compute daily data#
+daily_cases = diff(state_data$Cases)#
+daily_cases = c(state_data$Cases[1], daily_cases)#
+daily_tests = diff(state_data$PeopleTested)#
+daily_tests = c(state_data$PeopleTested, daily_tests)#
+pct_pos = daily_cases/daily_tests
+length(daily_cases)
+length(daily_tests)
+tw <- readPNG("twitter.png")#
+#usr <- par("usr")#
+#plot.new()#
+#rasterImage(tw, usr[1], usr[3], usr[2], usr[4])#
+#
+files <- list.files("COVID-19 Website Data Files")#
+files <- files[-1]#
+state_data <- data.frame()#
+tested <- c()#
+cases <- c()#
+deaths <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+	#get state data#
+	state_data <-  data.frame(rbind(state_data, as.numeric(tmp$value[1:6])) )#
+}#
+#
+varnames <- tmp$metric[1:6]#
+names(state_data) <- varnames#
+names(state_data)[4] <- "PeopleTested"#
+report_dates = fdates#
+report_dates = date(report_dates)#
+state_data$ReportDate <- report_dates#
+#compute daily data#
+daily_cases = diff(state_data$Cases)#
+daily_cases = c(state_data$Cases[1], daily_cases)#
+daily_tests = diff(state_data$PeopleTested)#
+daily_tests = c(state_data$PeopleTested[1], daily_tests)#
+pct_pos = daily_cases/daily_tests#
+state_data$daily_cases <- daily_cases#
+state_data$daily_tests <- daily_tests#
+state_data$pct_pos <- pct_pos
+#compute last day + 1 for plotting purposes#
+lastd = as.numeric(report_dates[1]) + 24#
+#
+####Surveillance plot#
+today <- format(Sys.time(), form = "%b%d")#
+pdf(paste0("co_positive_",today,".pdf", width = 8, height = 8)#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")
+lastd
+totalreports <- length(pct_pos)
+totalreports
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")
+abline(v = seq(18339-2, lastd, by = 1), col = "white", lwd = 1.25)
+report_dates[totalreports]
+eport_dates[1]
+report_dates[1]
+as.numeric(report_dates[1])
+as.numeric(report_dates[2])
+lastd = as.numeric(report_dates[totalreports])#
+firstd = as.numeric(report_dates[1])
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")
+pdf(file = paste0("Figure/co_positive_",today,".pdf", width = 8, height = 8)#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+today
+pdf(file = paste0("Figures/co_positive_",today,".pdf", width = 8, height = 8)#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf(file = paste0("Figures/co_positive_",today,".pdf", width = 8, height = 8)
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))
+pdf(file = paste0("Figures/co_positive_",today,".pdf", width = 8, height = 8) )#
+#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+jpeg(file = paste0("Figures/co_positive_",today,".jpeg"), width = 8, height = 8 )#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+jpeg(file = paste0("Figures/co_positive_",today,".jpeg"))#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.1,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+pdf(file = paste0("Figures/co_positive_",today,".pdf"), width = 10, height = 8 )#
+#
+#jpeg(file = paste0("Figures/co_positive_",today,".jpeg"))#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()
+plot( log(state_data$Cases, base = 10), log(state_data$daily_cases, base = 10) )
+plot( log(state_data$Cases, base = 10), log(state_data$daily_cases, base = 10), type = "b" )
+# x-day average function#
+xday.avg = function(y, days){#
+	nobs = length(y)#
+	nmeans = nobs - days#
+	if(nmeans <= 0){#
+		message("Error! not enough data")#
+		return(0)#
+	}#
+	window = 1:days#
+	xdaymean = rep(NA, nmeans)#
+	count = 1#
+	while(max(window) < nobs )#
+	{#
+		xdaymean[count] = mean(y[window])#
+		window = window + 1#
+		count = count + 1#
+	}#
+}
+# x-day average function#
+xday.avg = function(y, days){#
+	nobs = length(y)#
+	nmeans = nobs - days#
+	if(nmeans <= 0){#
+		message("Error! not enough data")#
+		return(0)#
+	}#
+	window = 1:days#
+	xdaymean = rep(NA, nmeans)#
+	count = 1#
+	while(max(window) < nobs )#
+	{#
+		xdaymean[count] = mean(y[window])#
+		window = window + 1#
+		count = count + 1#
+	}#
+	return(xdaymean)#
+}
+xday.avg(tmp, 2)
+# x-day average function#
+xday.avg = function(y, days){#
+	nobs = length(y)#
+	nmeans = nobs - days#
+	if(nmeans < 0){#
+		message("Error! not enough data")#
+		return(0)#
+	}#
+	window = 1:days#
+	xdaymean = rep(NA, nmeans)#
+	count = 1#
+	while(max(window) < nobs )#
+	{#
+		xdaymean[count] = mean(y[window])#
+		window = window + 1#
+		count = count + 1#
+	}#
+	return(xdaymean)#
+}#
+#
+tmp = 1:10#
+xday.avg(tmp, 10)
+tmp = 1:10#
+xday.avg(tmp, 10)
+length(tmp)
+# x-day average function#
+xday.avg = function(y, days){#
+	nobs = length(y)#
+	nmeans = nobs - days + 1#
+	if(nmeans < 0){#
+		message("Error! not enough data")#
+		return(0)#
+	}#
+	window = 1:days#
+	xdaymean = rep(NA, nmeans)#
+	count = 1#
+	while(max(window) < nobs )#
+	{#
+		xdaymean[count] = mean(y[window])#
+		window = window + 1#
+		count = count + 1#
+	}#
+	return(xdaymean)#
+}#
+#
+tmp = 1:10#
+xday.avg(tmp, 10)
+rm(list = ls())
+# x-day average function#
+xday.avg = function(y, days){#
+	nobs = length(y)#
+	nmeans = nobs - days + 1#
+	if(nmeans < 1){#
+		message("Error! not enough data")#
+		return(0)#
+	}#
+	window = 1:days#
+	xdaymean = rep(NA, nmeans)#
+	count = 1#
+	while(max(window) < nobs )#
+	{#
+		xdaymean[count] = mean(y[window])#
+		window = window + 1#
+		count = count + 1#
+	}#
+	return(xdaymean)#
+}
+tmp = 1:10
+y = tmp
+days = 10
+nobs = length(y)#
+	nmeans = nobs - days + 1
+window = 1:days#
+	xdaymean = rep(NA, nmeans)#
+	count = 1
+count
+mean(y[window])
+xday.avg(tmp, 10)
+xdaymean
+max(window)
+# x-day average function#
+xday.avg = function(y, days){#
+	nobs = length(y)#
+	nmeans = nobs - days + 1#
+	if(nmeans < 1){#
+		message("Error! not enough data")#
+		return(0)#
+	}#
+	window = 1:days#
+	xdaymean = rep(NA, nmeans)#
+	count = 1#
+	while(max(window) <= nobs )#
+	{#
+		xdaymean[count] = mean(y[window])#
+		window = window + 1#
+		count = count + 1#
+	}#
+	return(xdaymean)#
+}#
+#
+tmp = 1:10#
+xday.avg(tmp, 10)
+xday.avg(tmp, 11)
+xday.avg(tmp, 9)
+plot(state_data$ReportDate, state_data$Cases, type = "b")
+library(readr)#
+library(stringr)#
+library(lubridate)#
+library(png)#
+library(plotrix)#
+#
+# x-day average function#
+xday.avg = function(y, days){#
+	nobs = length(y)#
+	nmeans = nobs - days + 1#
+	if(nmeans < 1){#
+		message("Error! not enough data")#
+		return(0)#
+	}#
+	window = 1:days#
+	xdaymean = rep(NA, nmeans)#
+	count = 1#
+	while(max(window) <= nobs )#
+	{#
+		xdaymean[count] = mean(y[window])#
+		window = window + 1#
+		count = count + 1#
+	}#
+	return(xdaymean)#
+}#
+#
+#Set working directory#
+setwd("/Users/zacharyweller/Google Drive/COcovid")#
+#load twitter image#
+tw <- readPNG("twitter.png")#
+#load and process covid data #
+files <- list.files("COVID-19 Website Data Files")#
+files <- files[-1]#
+state_data <- data.frame()#
+tested <- c()#
+cases <- c()#
+deaths <- c()#
+fdates <- c()#
+for(f in files){#
+	#read data#
+	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )#
+	#get dates#
+	fdates <- c(fdates, substr(f, 22, 31) )#
+	#get tests#
+	tested <- c(tested, as.numeric(tmp$value[4]))#
+	#get cases#
+	cases <- c(cases, as.numeric(tmp$value[1]))#
+	#get state data#
+	state_data <-  data.frame(rbind(state_data, as.numeric(tmp$value[1:6])) )#
+}#
+#tidy the data#
+varnames <- tmp$metric[1:6]#
+names(state_data) <- varnames#
+names(state_data)[4] <- "PeopleTested"#
+report_dates = fdates#
+report_dates = date(report_dates)#
+state_data$ReportDate <- report_dates#
+#compute daily data#
+daily_cases = diff(state_data$Cases)#
+daily_cases = c(state_data$Cases[1], daily_cases)#
+daily_tests = diff(state_data$PeopleTested)#
+daily_tests = c(state_data$PeopleTested[1], daily_tests)#
+pct_pos = daily_cases/daily_tests#
+state_data$daily_cases <- daily_cases#
+state_data$daily_tests <- daily_tests#
+state_data$pct_pos <- pct_pos#
+#
+#compute first day, last day for plotting purposes#
+totalreports <- length(pct_pos)#
+lastd = as.numeric(report_dates[totalreports])#
+firstd = as.numeric(report_dates[1])#
+#
+########################
+####Surveillance plot#
+#######################
+today <- format(Sys.time(), form = "%b%d")#
+#
+pdf(file = paste0("Figures/co_positive_",today,".pdf"), width = 10, height = 8 )#
+#
+#jpeg(file = paste0("Figures/co_positive_",today,".jpeg"))#
+plot(report_dates, pct_pos, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Percent Positive Tests", side = 2, line = 2.5, cex = 1.5)#
+mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")#
+points(report_dates, pct_pos*100, col = "darkred", pch = 16)#
+text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)#
+text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)#
+#lines(report_dates, daily_tests/max(daily_tests))#
+rect(max(report_dates - 6.5),85,par("usr")[2],par("usr")[4],col = "white")#
+text(max(report_dates - 1.2), 99, paste("Total Tests: ", sum(daily_tests)) )#
+text(max(report_dates - 2.35), 95, paste("Total Positive Tests: ", sum(daily_cases)) )#
+text(max(report_dates - 2), 91, paste0("Total Pct Positive: ", round(100*sum(daily_cases)/sum(daily_tests),1) ,"%") )#
+rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)#
+mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "deepskyblue2")#
+#
+dev.off()#
+#
+#####################
+### Total cases plot#
+#####################
+plot(state_data$ReportDate, state_data$Cases, type = "b")
+plot(report_dates, state_data$Cases, type = "n", ylim = c(0, 100), xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)
+plot(report_dates, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Total Cases", side = 2, line = 2.5, cex = 1.5)
+mtext("Total Cases", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")
+abline(h = seq(0, 10000, by = 10), col = "white", lwd = 1.25)
+plot(report_dates, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Total Cases", side = 2, line = 2.5, cex = 1.5)#
+mtext("Total Cases", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 10000, by = 100), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)
+plot(report_dates, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Total Cases", side = 2, line = 2.5, cex = 1.5)#
+mtext("Total Cases", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")
+abline(h = seq(0, 10000, by = 1000), col = "white", lwd = 1.25)
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)
+plot(report_dates, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Total Cases", side = 2, line = 2.5, cex = 1.5)#
+mtext("Total Cases", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 10000, by = 500), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)
+lines(state_data$ReportDate, state_data$Cases, col = "darkred", lwd = 2, type = "b")
+plot(report_dates, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Total Cases", side = 2, line = 2.5, cex = 1.5)#
+mtext("Total Cases", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 20000, by = 500), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(state_data$ReportDate, state_data$Cases, col = "darkred", lwd = 2, type = "b")
+plot(report_dates, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1), ylim = c(0, max(state_data$Cases)+1000))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Total Cases", side = 2, line = 2.5, cex = 1.5)#
+mtext("Total Cases", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 20000, by = 500), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(state_data$ReportDate, state_data$Cases, col = "darkred", lwd = 2, type = "b")
+plot(report_dates, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1), ylim = c(0, max(state_data$Cases)+1500))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Total Cases", side = 2, line = 2.5, cex = 1.5)#
+mtext("Total Cases", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 20000, by = 500), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(state_data$ReportDate, state_data$Cases, col = "darkred", lwd = 2, type = "b")
+plot(report_dates, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1), ylim = c(0, max(state_data$Cases)+1200))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Total Cases", side = 2, line = 2.5, cex = 1.5)#
+mtext("Total Cases", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 20000, by = 500), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(state_data$ReportDate, state_data$Cases, col = "darkred", lwd = 2, type = "b")
+plot(state_data$ReportDate, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1), ylim = c(0, max(state_data$Cases)+1200))#
+datelabs = format(report_dates, format = "%b %d")#
+#datelabs[1] = paste("pre", datelabs[1])#
+axis(side = 1, at = report_dates, labels =  datelabs)#
+mtext("(and previous)", side = 1, line = 1.8, at = report_dates[1], cex = 0.85)#
+mtext("Date of Report", side = 1, line = 2.75, cex = 1.5)#
+mtext("Total Cases", side = 2, line = 2.5, cex = 1.5)#
+mtext("Total Cases", side = 3, line = 1.5, cex = 2)#
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")#
+abline(h = seq(0, 20000, by = 500), col = "white", lwd = 1.25)#
+abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)#
+lines(state_data$ReportDate, state_data$Cases, col = "darkred", lwd = 2, type = "b")#
+points(state_data$ReportDate, state_data$Cases, col = "darkred", pch = 16)
+head(state_data)
+lines(state_data$ReportDate, state_data$PeopleTested)
+max(state_data$PeopleTested)
+nday = 5#
+totalcases_xday = xday.avg(state_data$Cases, nday)#
+dailycases_xday = xday.avg(state_data$daily_cases, nday)
+plot(log(totalcases_xday, base = 10), log(dailycases_xday, base = 10))
+plot(log(totalcases_xday, base = 10), log(dailycases_xday, base = 10), lty = "b")
+plot(log(totalcases_xday, base = 10), log(dailycases_xday, base = 10), type = "l")
+nday = 7#
+totalcases_xday = xday.avg(state_data$Cases, nday)#
+dailycases_xday = xday.avg(state_data$daily_cases, nday)#
+plot(log(totalcases_xday, base = 10), log(dailycases_xday, base = 10), type = "l")
+plot(log(totalcases_xday, base = 10), log(dailycases_xday, base = 10), type = "b")
+plot(log(totalcases_xday, base = 10), log(dailycases_xday, base = 10), type = "b", xlab = "Log (Total Reported Cases)", ylab = "Log (Daily New Cases)")
