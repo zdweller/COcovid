@@ -1,8 +1,11 @@
+#Load R packages
 library(readr)
 library(stringr)
 library(lubridate)
 library(png)
+library(grid)
 library(plotrix)
+library(tidyverse)
 
 # x-day average function
 xday.avg = function(y, days){
@@ -28,6 +31,7 @@ xday.avg = function(y, days){
 setwd("/Users/zacharyweller/Google Drive/COcovid")
 #load twitter image
 tw <- readPNG("twitter.png")
+twg <- rasterGrob(tw, interpolate = T)
 #load and process covid data 
 files <- list.files("COVID-19 Website Data Files")
 files <- files[-1]
@@ -71,7 +75,7 @@ lastd = as.numeric(report_dates[totalreports])
 firstd = as.numeric(report_dates[1])
 
 #######################
-####Surveillance plot
+####Surveillance plot: base R
 ######################
 today <- format(Sys.time(), form = "%b%d")
 
@@ -102,6 +106,33 @@ rasterImage(tw, min(report_dates)-2, 105, min(report_dates)-1 , 110, xpd = T)
 mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "deepskyblue2")
 
 dev.off()
+
+#######################
+####Surveillance plot: ggplot
+######################
+leftpt <- round(dim(state_data)[1]/5)
+gsurv <- ggplot(aes(x = ReportDate, y = pct_pos*100), data = state_data) + geom_line( col = "darkred", size = 1.0) + geom_point(col = "darkred", size = 2) + ylim(c(0, 100)) + xlab("Date of Report") + ylab("Percent Positive Tests")
+gsurv <-  gsurv + geom_rect(xmin = max(state_data$ReportDate) - 10, xmax = max(state_data$ReportDate), ymin = 90, ymax = 100, color = "black", fill = "white")
+bsize = 4.5
+gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 98, label = paste("Total Tests:    ", sum(state_data$daily_tests))), size = bsize)
+gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 95, label = paste("Total Positive:   ", sum(state_data$daily_cases))), size = bsize)
+gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 92, label = paste0("Pct Positive:      ", round(sum(state_data$daily_case)/sum(state_data$daily_tests)*100,1),"%" ) ), size = bsize )
+gsurv <- gsurv + geom_text(aes(x = ReportDate, y = 75, label = as.character(daily_tests), angle = 45), size = 3) + geom_text(aes(x =ReportDate[leftpt], y = 82, label = "Number of Daily Tests"), size = 4.5)
+gsurv <- gsurv + ggtitle("Surveillance")
+gsurv <- gsurv + scale_x_date(date_labels = "%b %d", date_breaks = "3 days")
+gsurv
+
+####################
+### Total cases plot: ggplot
+####################
+gtotal <- ggplot(aes(x = ReportDate, y = Cases), data = state_data) + geom_bar(stat = "identity", col = "black") + xlab("Date of Report") + ylab("Total Confirmed Cases") + ggtitle("Confirmed Cases")
+gtotal <- gtotal + stat_smooth(aes(x = ReportDate, y = Cases), col = "red", se = F, data = state_data)
+gtotal <- gtotal + scale_x_date(date_labels = "%b %d", date_breaks = "3 days")
+gtotal
+
+
+#gsurv + annotation_custom(twg, xmin = report_dates[1], xmax = report_dates[2], ymin = 90, ymax = 100)
+
 
 ####################
 ### Total cases plot
