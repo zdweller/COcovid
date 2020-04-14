@@ -28,6 +28,27 @@ xday.avg = function(y, days){
 	return(xdaymean)
 }
 
+# x-day sum function
+xday.sum = function(y, days){
+	nobs = length(y)
+	nsums = nobs - days + 1
+	if(nsums < 1){
+		message("Error! not enough data")
+		return(0)
+	}
+	window = 1:days
+	xdaysum = rep(NA, nsums)
+	count = 1
+	while(max(window) <= nobs )
+	{
+		xdaysum[count] = sum(y[window])
+		window = window + 1
+		count = count + 1
+	}
+	return(xdaysum)
+}
+
+
 #Set working directory
 setwd("/Users/zacharyweller/Google Drive/COcovid")
 #load twitter image
@@ -75,6 +96,62 @@ totalreports <- length(pct_pos)
 lastd = as.numeric(report_dates[totalreports])
 firstd = as.numeric(report_dates[1])
 
+
+#######################
+####Surveillance plot: ggplot
+######################
+leftpt <- round(dim(state_data)[1]/5)
+gsurv <- ggplot(aes(x = ReportDate, y = pct_pos*100), data = state_data) + geom_line( col = "red", size = 1.0) + geom_point(col = "red", size = 2) + ylim(c(0, 100)) + xlab("Date of Report") + ylab("Percent Positive Tests")
+gsurv <-  gsurv + geom_rect(xmin = max(state_data$ReportDate) - 10, xmax = max(state_data$ReportDate), ymin = 83, ymax = 103, color = "black", fill = "white")
+bsize = 2.8
+gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 100, label = paste("Total Tests:    ", sum(state_data$daily_tests))), size = bsize)
+gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 93, label = paste("Total Positive:   ", sum(state_data$daily_cases))), size = bsize)
+gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 86, label = paste0("Pct Positive:      ", round(sum(state_data$daily_case)/sum(state_data$daily_tests)*100,1),"%" ) ), size = bsize )
+gsurv <- gsurv + geom_text(aes(x = ReportDate, y = 75, label = as.character(daily_tests), angle = 45), size = 2) + geom_text(aes(x =ReportDate[leftpt], y = 87, label = "Number of Daily Tests"), size = 3.5)
+gsurv <- gsurv + ggtitle("Surveillance")
+gsurv <- gsurv + scale_x_date(date_labels = "%b %d", date_breaks = "5 days")
+gsurv
+
+####################
+### Total cases plot: ggplot
+####################
+shift = 700
+maxc <- max(state_data$Cases) - shift
+gtotal <- ggplot(aes(x = ReportDate, y = Cases), data = state_data) + geom_bar(stat = "identity", col = "black") + xlab("Date of Report") + ylab("Total Confirmed Cases") + ggtitle("Total Confirmed Cases")
+gtotal <- gtotal + stat_smooth(aes(x = ReportDate, y = Cases), col = "red", se = F, data = state_data)
+gtotal <- gtotal + scale_x_date(date_labels = "%b %d", date_breaks = "5 days")  + geom_text(aes(x = report_dates[7],y = maxc+shift/2 , label = "@wellerstats"), col = "deepskyblue2", size = 3.0)
+gtotal
+#+ annotation_custom(twg, xmin = report_dates[1], xmax = report_dates[3], ymin = maxc, ymax = maxc + shift)
+
+####################
+### Daily cases plot: ggplot
+####################
+gdaily <- ggplot(aes(x = ReportDate, y = daily_cases), data = state_data) + geom_bar(stat = "identity", col = "black") + xlab("Date of Report") + ylab("Daily Confirmed Cases") + ggtitle("Daily Confirmed Cases") + stat_smooth(aes(x = ReportDate, y = daily_cases), col = "red", se = F, data = state_data) + scale_x_date(date_labels = "%b %d", date_breaks = "5 days")
+gdaily
+
+
+####################
+### Trajectory plot: ggplot
+####################
+nday = 7
+dailycases_xday = xday.sum(state_data$daily_cases, nday)
+plot(log(state_data$Cases[-(1:nday-1)], base = 10), log(dailycases_xday, base = 10), type = "b", xlab = "Total Confirmed Cases) ", ylab = "New Confirmed Cases in Last Week")
+#create new data set
+growthdata <- data.frame("ReportDate" = state_data$ReportDate[-(1:nday-1)], "Cases" = state_data$Cases[-(1:nday-1)],  "lastweektotal" = dailycases_xday)
+ggrow <- ggplot(data = growthdata, aes(x = Cases, y = lastweektotal)) + geom_line(col = "red", size = 1) + geom_point(col = "red", size = 2) + xlab("Total Confirmed Cases (log)") + ylab("New Confimed Cases in Last Week (log)") + scale_x_continuous(trans = "log10") + scale_y_continuous(trans = "log10") + ggtitle("Case Trajectory")
+ggrow 
+
+gall <- grid.arrange(gtotal, gdaily, ggrow, gsurv, nrow = 2, top = textGrob("Colorado Covid-19", gp = gpar(fontsize = 20, font = 3)) )
+
+pdf(file = paste0("Figures/co_positive_",today,".pdf"), width = 10, height = 8 )
+gall 
+dev.off()
+
+#par("usr")
+#rasterImage(tw, 2.8, 3.2, 3 , 3.4, xpd = T)
+#mtext("hi", side = 2, line = 3)
+#gsurv + annotation_custom(twg, xmin = report_dates[1], xmax = report_dates[2], ymin = 90, ymax = 100)
+
 #######################
 ####Surveillance plot: base R
 ######################
@@ -94,8 +171,8 @@ mtext("Colorado: COVID-19 Testing", side = 3, line = 1.5, cex = 2)
 rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")
 abline(h = seq(0, 100, by = 10), col = "white", lwd = 1.25)
 abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)
-lines(report_dates, pct_pos*100, col = "darkred", lwd = 2, type = "b")
-points(report_dates, pct_pos*100, col = "darkred", pch = 16)
+lines(report_dates, pct_pos*100, col = "red", lwd = 2, type = "b")
+points(report_dates, pct_pos*100, col = "red", pch = 16)
 text(report_dates+0.35, 63, as.character(daily_tests), srt = 45)
 text(report_dates[10] , 75, "Number of Tests", cex = 1.25, font = 2)
 #lines(report_dates, daily_tests/max(daily_tests))
@@ -108,37 +185,8 @@ mtext("@wellerstats", at = min(report_dates)+1.5,  side = 3, line = 0.4, col = "
 
 dev.off()
 
-#######################
-####Surveillance plot: ggplot
-######################
-leftpt <- round(dim(state_data)[1]/5)
-gsurv <- ggplot(aes(x = ReportDate, y = pct_pos*100), data = state_data) + geom_line( col = "darkred", size = 1.0) + geom_point(col = "darkred", size = 2) + ylim(c(0, 100)) + xlab("Date of Report") + ylab("Percent Positive Tests")
-gsurv <-  gsurv + geom_rect(xmin = max(state_data$ReportDate) - 10, xmax = max(state_data$ReportDate), ymin = 90, ymax = 100, color = "black", fill = "white")
-bsize = 4.5
-gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 98, label = paste("Total Tests:    ", sum(state_data$daily_tests))), size = bsize)
-gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 95, label = paste("Total Positive:   ", sum(state_data$daily_cases))), size = bsize)
-gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 92, label = paste0("Pct Positive:      ", round(sum(state_data$daily_case)/sum(state_data$daily_tests)*100,1),"%" ) ), size = bsize )
-gsurv <- gsurv + geom_text(aes(x = ReportDate, y = 75, label = as.character(daily_tests), angle = 45), size = 3) + geom_text(aes(x =ReportDate[leftpt], y = 82, label = "Number of Daily Tests"), size = 4.5)
-gsurv <- gsurv + ggtitle("Surveillance")
-gsurv <- gsurv + scale_x_date(date_labels = "%b %d", date_breaks = "3 days")
-gsurv
-
 ####################
-### Total cases plot: ggplot
-####################
-gtotal <- ggplot(aes(x = ReportDate, y = Cases), data = state_data) + geom_bar(stat = "identity", col = "black") + xlab("Date of Report") + ylab("Total Confirmed Cases") + ggtitle("Confirmed Cases")
-gtotal <- gtotal + stat_smooth(aes(x = ReportDate, y = Cases), col = "red", se = F, data = state_data)
-gtotal <- gtotal + scale_x_date(date_labels = "%b %d", date_breaks = "3 days")
-gtotal
-
-
-grid.arrange(gsurv, gtotal, nrow = 1)
-
-#gsurv + annotation_custom(twg, xmin = report_dates[1], xmax = report_dates[2], ymin = 90, ymax = 100)
-
-
-####################
-### Total cases plot
+### Total cases plot: base R
 ####################
 plot(state_data$ReportDate, state_data$Cases, type = "n", xlab = "", ylab = "", xaxt = "n", xlim = c(min(report_dates) - 1, max(report_dates)+1), ylim = c(0, max(state_data$Cases)+1200))
 datelabs = format(report_dates, format = "%b %d")
@@ -151,19 +199,7 @@ mtext("Total Cases", side = 3, line = 1.5, cex = 2)
 rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "gray")
 abline(h = seq(0, 20000, by = 500), col = "white", lwd = 1.25)
 abline(v = seq(firstd - 1 , lastd + 1, by = 1), col = "white", lwd = 1.25)
-lines(state_data$ReportDate, state_data$Cases, col = "darkred", lwd = 2, type = "b")
+lines(state_data$ReportDate, state_data$Cases, col = "red", lwd = 2, type = "b")
 #lines(state_data$ReportDate, state_data$PeopleTested)
-points(state_data$ReportDate, state_data$Cases, col = "darkred", pch = 16)
-
-
-
-## Total Cases vs Daily New Cases log-log
-plot( log(state_data$Cases, base = 10), log(state_data$daily_cases, base = 10), type = "b" )
-
-##################
-nday = 7
-totalcases_xday = xday.avg(state_data$Cases, nday)
-dailycases_xday = xday.avg(state_data$daily_cases, nday)
-plot(log(totalcases_xday, base = 10), log(dailycases_xday, base = 10), type = "b", xlab = "Log (Total Reported Cases)", ylab = "Log (Daily New Cases)")
-
+points(state_data$ReportDate, state_data$Cases, col = "red", pch = 16)
 
