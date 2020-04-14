@@ -4,6 +4,7 @@ library(stringr)
 library(lubridate)
 library(png)
 library(grid)
+library(gridExtra)
 library(plotrix)
 library(tidyverse)
 
@@ -130,6 +131,8 @@ gtotal <- gtotal + stat_smooth(aes(x = ReportDate, y = Cases), col = "red", se =
 gtotal <- gtotal + scale_x_date(date_labels = "%b %d", date_breaks = "3 days")
 gtotal
 
+
+grid.arrange(gsurv, gtotal, nrow = 1)
 
 #gsurv + annotation_custom(twg, xmin = report_dates[1], xmax = report_dates[2], ymin = 90, ymax = 100)
 
