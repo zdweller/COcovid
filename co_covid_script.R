@@ -105,7 +105,7 @@ gsurv <- ggplot(aes(x = ReportDate, y = pct_pos*100), data = state_data) + geom_
 gsurv <-  gsurv + geom_rect(xmin = max(state_data$ReportDate) - 10, xmax = max(state_data$ReportDate), ymin = 83, ymax = 103, color = "black", fill = "white")
 bsize = 2.8
 gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 100, label = paste("Total Tests:    ", sum(state_data$daily_tests))), size = bsize)
-gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 93, label = paste("Total Positive:   ", sum(state_data$daily_cases))), size = bsize)
+gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 93, label = paste("Total Positive: ", sum(state_data$daily_cases))), size = bsize)
 gsurv <- gsurv + geom_text( aes(x = max(state_data$ReportDate) - 5, y = 86, label = paste0("Pct Positive:      ", round(sum(state_data$daily_case)/sum(state_data$daily_tests)*100,1),"%" ) ), size = bsize )
 gsurv <- gsurv + geom_text(aes(x = ReportDate, y = 75, label = as.character(daily_tests), angle = 45), size = 2) + geom_text(aes(x =ReportDate[leftpt], y = 87, label = "Number of Daily Tests"), size = 3.5)
 gsurv <- gsurv + ggtitle("Surveillance")
