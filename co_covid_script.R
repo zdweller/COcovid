@@ -7,6 +7,7 @@ library(grid)
 library(gridExtra)
 library(plotrix)
 library(tidyverse)
+library(stringr)
 
 #Stay at home order started Thur, March 26
 #Safer at home order started Mon, Apri 27
@@ -60,6 +61,10 @@ twg <- rasterGrob(tw, interpolate = T)
 #load and process covid data 
 files <- list.files("COVID-19 Website Data Files")
 files <- files[-1]
+#remove duplicated files
+bad <- which( str_detect(files, "\\)") )
+files <- files[-bad]
+
 state_data <- data.frame()
 tested <- c()
 cases <- c()
@@ -84,6 +89,7 @@ names(state_data)[4] <- "PeopleTested"
 report_dates = fdates
 report_dates = date(report_dates)
 state_data$ReportDate <- report_dates
+ReportDate <- state_data$ReportDate
 #compute daily data
 daily_cases = diff(state_data$Cases)
 daily_cases = c(state_data$Cases[1], daily_cases)
@@ -107,12 +113,12 @@ leftpt <- round(dim(state_data)[1]/5)
 
 gsurv <- ggplot(aes(x = ReportDate, y = pct_pos*100), data = state_data) + geom_line( col = "red", size = 1.0) + geom_point(col = "red", size = 2) + ylim(c(0, 100)) + xlab("Date of Report") + ylab("Percent Positive Tests")
 rect_shift = 8
-gsurv <-  gsurv + geom_rect(xmin = mean(state_data$ReportDate) - rect_shift, xmax = mean(state_data$ReportDate)+rect_shift, ymin = 83, ymax = 103, color = "black", fill = "white")
+gsurv <-  gsurv + geom_rect(xmin = mean(ReportDate) - rect_shift, xmax = mean(ReportDate)+rect_shift, ymin = 83, ymax = 103, color = "black", fill = "white")
 bsize = 2.8
 tshift = 0
-gsurv <- gsurv + geom_text( aes(x = mean(state_data$ReportDate) - tshift, y = 100, label = paste("Total Tests:    ", sum(state_data$daily_tests))), size = bsize)
-gsurv <- gsurv + geom_text( aes(x = mean(state_data$ReportDate) - tshift, y = 93, label = paste("Total Positive: ", sum(state_data$daily_cases))), size = bsize)
-gsurv <- gsurv + geom_text( aes(x = mean(state_data$ReportDate) - tshift, y = 86, label = paste0("Pct Positive:      ", round(sum(state_data$daily_case)/sum(state_data$daily_tests)*100,1),"%" ) ), size = bsize )
+gsurv <- gsurv + geom_text( aes(x = mean(ReportDate) - tshift, y = 100, label = paste("Total Tests:    ", sum(daily_tests))), size = bsize)
+gsurv <- gsurv + geom_text( aes(x = mean(ReportDate) - tshift, y = 93, label = paste("Total Positive: ", sum(daily_cases))), size = bsize)
+gsurv <- gsurv + geom_text( aes(x = mean(ReportDate) - tshift, y = 86, label = paste0("Pct Positive:      ", round(sum(daily_cases)/sum(daily_tests)*100,1),"%" ) ), size = bsize )
 gsurv <- gsurv + geom_text(aes(x = ReportDate, y = 75, label = as.character(daily_tests), angle = 45), size = 2) + geom_text(aes(x =ReportDate[leftpt], y = 83, label = "Number of Daily Tests"), size = 2.0)
 gsurv <- gsurv + ggtitle("Surveillance")
 gsurv <- gsurv + scale_x_date(date_labels = "%b %d", date_breaks = "5 days")
