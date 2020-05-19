@@ -7,6 +7,7 @@ library(grid)
 library(gridExtra)
 library(plotrix)
 library(tidyverse)
+library(readxl)
 library(stringr)
 
 #Stay at home order started Thur, March 26
@@ -59,10 +60,10 @@ setwd("/Users/zacharyweller/Google Drive/COcovid")
 tw <- readPNG("twitter.png")
 twg <- rasterGrob(tw, interpolate = T)
 #load and process covid data 
-files <- list.files("COVID-19 Website Data Files")
+files <- list.files("Data folder")
 files <- files[-1]
 #remove duplicated files
-bad <- which( str_detect(files, "\\)") )
+bad <- which( str_detect(files, "\\)") | str_detect(files, "xlsx") )
 files <- files[-bad]
 
 state_data <- data.frame()
@@ -71,8 +72,12 @@ cases <- c()
 deaths <- c()
 fdates <- c()
 for(f in files){
-	#read data
-	tmp <-  read_csv(paste0("COVID-19 Website Data Files/", f) )
+	#read data -- some are xlsx
+	if(str_detect(f, "csv")){
+		tmp <-  read_csv(paste0("Data folder/", f) )
+	}else{
+		tmp <- read_excel(paste0("Data folder/", f))
+		}
 	#get dates
 	fdates <- c(fdates, substr(f, 22, 31) )
 	#get tests
@@ -119,9 +124,9 @@ tshift = 0
 gsurv <- gsurv + geom_text( aes(x = mean(ReportDate) - tshift, y = 100, label = paste("Total Tests:    ", sum(daily_tests))), size = bsize)
 gsurv <- gsurv + geom_text( aes(x = mean(ReportDate) - tshift, y = 93, label = paste("Total Positive: ", sum(daily_cases))), size = bsize)
 gsurv <- gsurv + geom_text( aes(x = mean(ReportDate) - tshift, y = 86, label = paste0("Pct Positive:      ", round(sum(daily_cases)/sum(daily_tests)*100,1),"%" ) ), size = bsize )
-gsurv <- gsurv + geom_text(aes(x = ReportDate, y = 75, label = as.character(daily_tests), angle = 45), size = 2) + geom_text(aes(x =ReportDate[leftpt], y = 83, label = "Number of Daily Tests"), size = 2.0)
+gsurv <- gsurv + geom_text(aes(x = ReportDate, y = 75, label = as.character(daily_tests), angle = 55), size = 1.25) + geom_text(aes(x =ReportDate[leftpt], y = 83, label = "Number of Daily Tests"), size = 1.5)
 gsurv <- gsurv + ggtitle("Surveillance")
-gsurv <- gsurv + scale_x_date(date_labels = "%b %d", date_breaks = "5 days")
+gsurv <- gsurv + scale_x_date(date_labels = "%b %d", date_breaks = "9 days")
 
 #gsurv <- gsurv + annotate(geom = "rect", xmin = as.Date("2020-03-26"), xmax = as.Date("2020-04-26"), ymin = -Inf, ymax = 62.5, fill = "pink", alpha = 0.3)
 #gsurv <- gsurv + annotate(geom = "rect", xmin = as.Date("2020-04-26"), xmax = max(state_data$ReportDate), ymin = -Inf, ymax = 62.5, fill = "yellow", alpha = 0.3)
@@ -136,14 +141,14 @@ shift = 700
 maxc <- max(state_data$Cases) - shift
 gtotal <- ggplot(aes(x = ReportDate, y = Cases), data = state_data) + geom_bar(stat = "identity", col = "black") + xlab("Date of Report") + ylab("Total Confirmed Cases") + ggtitle("Total Confirmed Cases")
 gtotal <- gtotal + stat_smooth(aes(x = ReportDate, y = Cases), col = "red", se = F, data = state_data)
-gtotal <- gtotal + scale_x_date(date_labels = "%b %d", date_breaks = "5 days")  + geom_text(aes(x = report_dates[7],y = maxc+shift/2 , label = "@wellerstats"), col = "deepskyblue2", size = 3.0)
+gtotal <- gtotal + scale_x_date(date_labels = "%b %d", date_breaks = "9 days")  + geom_text(aes(x = report_dates[7],y = maxc+shift/2 , label = "@wellerstats"), col = "deepskyblue2", size = 3.0)
 
 #gtotal
 
 ####################
 ### Daily cases plot: ggplot
 ####################
-gdaily <- ggplot(aes(x = ReportDate, y = daily_cases), data = state_data) + geom_bar(stat = "identity", col = "black") + xlab("Date of Report") + ylab("Daily Confirmed Cases") + ggtitle("Daily Confirmed Cases") + stat_smooth(aes(x = ReportDate, y = daily_cases), col = "red", se = F, data = state_data) + scale_x_date(date_labels = "%b %d", date_breaks = "5 days")
+gdaily <- ggplot(aes(x = ReportDate, y = daily_cases), data = state_data) + geom_bar(stat = "identity", col = "black") + xlab("Date of Report") + ylab("Daily Confirmed Cases") + ggtitle("Daily Confirmed Cases") + stat_smooth(aes(x = ReportDate, y = daily_cases), col = "red", se = F, data = state_data) + scale_x_date(date_labels = "%b %d", date_breaks = "9 days")
 
 #gdaily
 
