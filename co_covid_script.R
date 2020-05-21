@@ -104,6 +104,11 @@ pct_pos = daily_cases/daily_tests
 state_data$daily_cases <- daily_cases
 state_data$daily_tests <- daily_tests
 state_data$pct_pos <- pct_pos
+names(state_data)[5] <- "deathacases"
+names(state_data)[6] <- "covid19deaths"
+daily_dac= diff(state_data$deathacases)
+daily_dac = c(state_data$deathacases[1], daily_dac)
+state_data$daily_dac = daily_dac
 
 #compute first day, last day for plotting purposes
 totalreports <- length(pct_pos)
@@ -117,7 +122,7 @@ firstd = as.numeric(report_dates[1])
 leftpt <- round(dim(state_data)[1]/5)
 
 gsurv <- ggplot(aes(x = ReportDate, y = pct_pos*100), data = state_data) + geom_line( col = "red", size = 1.0) + geom_point(col = "red", size = 2) + ylim(c(0, 100)) + xlab("Date of Report") + ylab("Percent Positive Tests")
-rect_shift = 8
+rect_shift = 12
 gsurv <-  gsurv + geom_rect(xmin = mean(ReportDate) - rect_shift, xmax = mean(ReportDate)+rect_shift, ymin = 83, ymax = 103, color = "black", fill = "white")
 bsize = 2.8
 tshift = 0
@@ -145,6 +150,18 @@ gtotal <- gtotal + scale_x_date(date_labels = "%b %d", date_breaks = "9 days")  
 
 #gtotal
 
+
+####################
+### Total deaths among cases plot: ggplot
+####################
+
+maxdac = max(state_data$daily_dac) - 0.1*max(state_data$daily_dac)
+
+gdeath<- ggplot(aes(x = ReportDate, y = daily_dac), data = state_data) + geom_bar(stat = "identity", col = "black") + xlab("Date of Report") + ylab("Daily Deaths Among Cases") + ggtitle("Daily Reported Deaths Among Cases") + stat_smooth(aes(x = ReportDate, y = daily_dac), col = "red", se = F, data = state_data) + scale_x_date(date_labels = "%b %d", date_breaks = "9 days") + geom_text(aes(x = report_dates[8],y = maxdac , label = "@wellerstats"), col = "deepskyblue2", size = 5.0)
+gdeath
+#gtotal
+
+
 ####################
 ### Daily cases plot: ggplot
 ####################
@@ -169,7 +186,7 @@ ggrow <- ggplot(data = growthdata, aes(x = Cases, y = lastweektotal)) + geom_lin
 #####################
 
 today_long <- format(Sys.time(), form = "%b %d, %Y")
-gall <- grid.arrange(gtotal, gdaily, ggrow, gsurv, nrow = 2, top = textGrob(paste("Colorado Covid-19 Reporting: ", today_long), gp = gpar(fontsize = 20, font = 3)) ) 
+gall <- grid.arrange(gdeath, gdaily, ggrow, gsurv, nrow = 2, top = textGrob(paste("Colorado Covid-19 Reporting: ", today_long), gp = gpar(fontsize = 20, font = 3)) ) 
 today <- format(Sys.time(), form = "%b%d")
 
 ggsave(file = paste0("Figures/co_data_",today,".jpeg"), gall, width = 10, height = 8 )
