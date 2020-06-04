@@ -9,6 +9,7 @@ library(plotrix)
 library(tidyverse)
 library(readxl)
 library(stringr)
+library(splines)
 
 #Stay at home order started Thur, March 26
 #Safer at home order started Mon, Apri 27
@@ -60,8 +61,8 @@ setwd("/Users/zacharyweller/Google Drive/COcovid")
 tw <- readPNG("twitter.png")
 twg <- rasterGrob(tw, interpolate = T)
 #load and process covid data 
-files <- list.files("Data folder")
-files <- files[-1]
+files <- list.files("Case data")
+files <- files[-length(files)]
 #remove duplicated files
 bad <- which( str_detect(files, "\\)") | str_detect(files, "xlsx") )
 files <- files[-bad]
@@ -74,9 +75,9 @@ fdates <- c()
 for(f in files){
 	#read data -- some are xlsx
 	if(str_detect(f, "csv")){
-		tmp <-  read_csv(paste0("Data folder/", f) )
+		tmp <-  read_csv(paste0("Case data/", f) )
 	}else{
-		tmp <- read_excel(paste0("Data folder/", f))
+		tmp <- read_excel(paste0("Case data/", f))
 		}
 	#get dates
 	fdates <- c(fdates, substr(f, 22, 31) )
@@ -178,6 +179,27 @@ plot(log(state_data$Cases[-(1:nday-1)], base = 10), log(dailycases_xday, base = 
 #create new data set
 growthdata <- data.frame("ReportDate" = state_data$ReportDate[-(1:nday-1)], "Cases" = state_data$Cases[-(1:nday-1)],  "lastweektotal" = dailycases_xday)
 ggrow <- ggplot(data = growthdata, aes(x = Cases, y = lastweektotal)) + geom_line(col = "red", size = 1) + geom_point(col = "red", size = 2) + xlab("Total Confirmed Cases (log)") + ylab("New Confimed Cases in Last Week (log)") + scale_x_continuous(trans = "log10") + scale_y_continuous(trans = "log10") + ggtitle("Case Trajectory")
+
+#ggrow 
+
+####################
+### Derivative plot: ggplot
+####################
+nday = 7
+avgdailycases_xday = xday.avg(state_data$daily_cases, nday)
+daytmp = 1: length(avgdailycases_xday)
+fx = spline(daytmp, avgdailycases_xday, method = "natural",)
+plot(fx, type = "l")
+points(daytmp, avgdailycases_xday, col = "red", pch = 16)
+fxd = splinefun(daytmp, avgdailycases_xday, method = "natural")
+der = fxd(daytmp, deriv = 1)
+plot(daytmp, der, type = "b")
+abline(h = 0)
+derivdata = data.frame(ReportDate = state_data$ReportDate[-(1:6)], der)
+
+gderiv<- ggplot(data = derivdata, aes(x = ReportDate, y = der)) + geom_point()+  geom_smooth(col = "red", size = 1, method = "lm", formula = "y ~ bs(x, 6)", se = F) + geom_abline(intercept = 0, slope = 0, color = "blue") + xlab("Report Date") + ylab("Derivative of Average Daily Cases in Last Week") + ggtitle("Derivative of Average Daily Cases in Last Week")
+
+gderiv
 
 #ggrow 
 
